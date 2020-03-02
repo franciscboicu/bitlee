@@ -16,7 +16,7 @@ def account_login():
 def account_register():
     pass
 
-@app.route('/u/<str:url_hash>')
+@app.route('/u/url_hash')
 def unshorten(url):
     pass
 
