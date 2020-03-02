@@ -1,0 +1,27 @@
+CREATE TABLE users (
+    id serial NOT NULL PRIMARY KEY ,
+    username text,
+    password text,
+    is_banned bool
+);
+
+CREATE TABLE urls (
+    id serial NOT NULL PRIMARY KEY ,
+    password text,
+    url text,
+    short_url text,
+    views int,
+    shortened int
+);
+
+CREATE TABLE user_urls (
+  id serial NOT NULL PRIMARY KEY ,
+  user_id int NOT NULL,
+  url_id int NOT NULL
+);
+
+ALTER TABLE ONLY user_urls
+ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users(id);
+
+ALTER TABLE ONLY user_urls
+ADD CONSTRAINT fk_url_id FOREIGN KEY (url_id) REFERENCES urls(id);
