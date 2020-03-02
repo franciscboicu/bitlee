@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, request, url_for, jsonify, session
 import test_data_manager as tdm
+import user_dm
 
 app = Flask(__name__)
 
@@ -21,7 +22,7 @@ def account_register():
         username = request.form['username']
         password = request.form['user-password']
         hashed_pass = tdm.hash_password(password)
-
+        user_dm.add_user(username, hashed_pass)
     return render_template('index.html')
 
 
