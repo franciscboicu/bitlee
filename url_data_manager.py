@@ -1,5 +1,6 @@
 import db, random,string
 
+
 def generate_random_id(size=3):
     chars = string.ascii_uppercase
     chars += string.digits
@@ -46,3 +47,23 @@ def add_url(cursor, data):
         'views': 0,
         'shortened': 1
     })
+
+
+def shortify(url):
+    short_url = ''
+    exists = check_if_url_exists(url)
+
+    if exists:
+        update_shortened(exists['id'])
+        return exists['short_url']
+
+    short_url = generate_random_id(3)
+
+    add_url({
+        'password': '',
+        'url': url,
+        'short_url': short_url,
+        'views': 0,
+        'shortened': 0
+    })
+    return str(short_url)

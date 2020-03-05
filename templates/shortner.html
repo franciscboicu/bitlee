@@ -63,22 +63,27 @@
         </div>
 
         <div class="col-md-4 text-center">
-
-            <!-- <img src="/static/bit-lee.png" width="100"/> -->
+            <br/><br/>
+            <img src="/static/bit-lee.png" width="100"/>
 
             <div class="form-group">
-                <form action="{{ 'login' if login is true else 'register' }}" method="post">
+                <form action="/" method="POST">
                     <div class="form-group">
-                        <label for="exampleFormControlInput1">Username</label>
-                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="username"
-                               name="username">
-                        <label for="exampleFormControlInput1">Password</label>
-                        <input type="password" class="form-control" id="exampleFormControlInput1"
-                               placeholder="password" name="user-password"><br>
+                        <input type="text" class="form-control" placeholder="Your long url"
+                               name="url">
+                               <br/>
                         <button type="submit"
-                                class="btn btn-primary ">{{ 'Login' if login is true else 'Register' }}</button>
+                                class="btn btn-primary btn-block">Send it to Bruce Lee</button>
                     </div>
                 </form>
+
+                {% if shortified_url_code %}
+                <br/>
+                <div class="card card-body bg-light">
+                    <span class="text-muted"><a href="http://127.0.0.1:5000/{{shortified_url_code}}" target="_blank">bitlee.me/{{shortified_url_code}}</a></span>
+                </div>
+                <br/>
+                {% endif %}
             </div>
         </div>
 

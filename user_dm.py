@@ -33,7 +33,7 @@ def add_user(cursor, username, password):
 @db.use
 def check_user(cursor, username):
     query = """
-        SELECT id, password
+        SELECT id, password, username
         FROM users
         WHERE username ILIKE %(username)s;
     """

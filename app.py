@@ -6,18 +6,29 @@ import url_data_manager as url_dm
 app = Flask(__name__)
 app.secret_key = user_dm.random_api_key()
 
+@app.route("/", defaults={"short_url": None},methods=["GET", "POST"])
+@app.route('/<short_url>', methods=["GET", "POST"])
+def index(short_url):
+    shortified_url_code = ''
+    if request.method == 'POST':
+        shortified_url_code = url_dm.shortify(request.form['url'])
 
-@app.route('/')
-def index():
-    stuff = tdm.get_everything()
-    code = url_dm.generate_random_id(3)
-    return jsonify(stuff)
-
+    if short_url == None:
+        return render_template('shortner.html', shortified_url_code=shortified_url_code)
+        
+    url = url_dm.check_if_short_url_exists(short_url)
+    if url:
+        url_dm.update_views(url['id'])
+        return redirect(url['url'])
+        
+    return render_template('shortner.html', shortified_url_code=shortified_url_code)
 
 @app.route('/account/login', methods=["POST", "GET"])
 def account_login():
     login = True
+
     logged_in = False
+    
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['user-password']
@@ -45,31 +56,11 @@ def account_register():
     return render_template('index.html', login=False)
 
 
-
-@app.route('/u/<short_url>')
-def unshorten(short_url):
-    url = url_dm.check_if_short_url_exists(short_url)
-    if url:
-        url_dm.update_views(url['id'])
-        return redirect(url['url'])
-    return '404'
-
-@app.route('/my')
-def my():
-    pass
-
-
-@app.route('/shorten-short', methods=['GET'])
+@app.route('/shorten-short', methods=['POST'])
 def make_short():
     short_url = ''
-
-    #hardcoded for test
     url = request.form.get('url')
-    #url = 'https://facebook.com/'
-
-    #hardcoded for test
-    password = request.form.get('password')
-    #password = ''
+    password = ''
 
     exists = url_dm.check_if_url_exists(url)
 
