@@ -12,9 +12,8 @@ app.config['domain_name'] = 'http://127.0.0.1:5000/'
 @app.route("/", defaults={"short_url": None},methods=["GET", "POST"])
 @app.route('/<short_url>', methods=["GET", "POST"])
 def index(short_url):
-    shortified_url_code = ''
+    shortified_url_code, password = '', ''
     for_user_id = None
-    password = ''
     if 'user_id' in session:
         for_user_id = session['user_id']
         
@@ -22,7 +21,7 @@ def index(short_url):
         if request.form['url'] == '':
             flash('Give Bruce Lee an URL to punch!')
             return render_template('shortner.html')
-        if 'user_id' in session:
+        if for_user_id is not None:
             password = request.form['password']
         shortified_url_code = url_dm.shortify(request.form['url'], for_user_id, password)
 
