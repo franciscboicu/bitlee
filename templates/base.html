@@ -5,7 +5,9 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <meta charset="UTF-8">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="">
+    
     <title>BitLee</title>
 </head>
 <body style="">
@@ -48,8 +50,9 @@
     {% block content %}{% endblock %}
 
 <script>
-
-
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
 </script>
 </body>
 </html>
