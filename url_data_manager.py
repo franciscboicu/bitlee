@@ -73,7 +73,7 @@ def delete_user_url(cursor, data):
         'url_id': data['url_id']
     })
 
-def shortify(url, for_user_id=None):
+def shortify(url, for_user_id=None, password=""):
     short_url = ''
     exists = check_if_url_exists(url)
 
@@ -84,7 +84,7 @@ def shortify(url, for_user_id=None):
     short_url = generate_random_id(3)
 
     last_id = add_url({
-        'password': '',
+        'password': password,
         'url': url,
         'short_url': short_url,
         'views': 0,

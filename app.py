@@ -14,14 +14,17 @@ app.config['domain_name'] = 'http://127.0.0.1:5000/'
 def index(short_url):
     shortified_url_code = ''
     for_user_id = None
+    password = ''
     if 'user_id' in session:
         for_user_id = session['user_id']
-
+        
     if request.method == 'POST':
         if request.form['url'] == '':
             flash('Give Bruce Lee an URL to punch!')
             return render_template('shortner.html')
-        shortified_url_code = url_dm.shortify(request.form['url'], for_user_id)
+        if 'user_id' in session:
+            password = request.form['password']
+        shortified_url_code = url_dm.shortify(request.form['url'], for_user_id, password)
 
     if short_url == None:
         return render_template('shortner.html', shortified_url_code=shortified_url_code)
@@ -89,27 +92,6 @@ def account_url_delete():
     url_dm.delete_user_url({'url_id': url_id, 'user_id': session.get("user_id")})
     return redirect(url_for("account_myurls"))
 
-@app.route('/shorten-short', methods=['POST'])
-def make_short():
-    short_url = ''
-    url = request.form.get('url')
-    password = ''
-
-    exists = url_dm.check_if_url_exists(url)
-
-    if exists:
-        url_dm.update_shortened(exists['id'])
-        return exists['short_url'] + " Already exists"
-
-    short_url = url_dm.generate_random_id(3)
-    url_dm.add_url({
-        'password': password,
-        'url': url,
-        'short_url': short_url,
-        'views': 0,
-        'shortened': 0
-    })
-    return str(short_url) + " Inserted as new"
 
 
 if __name__ == "__main__":
