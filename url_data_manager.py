@@ -7,6 +7,12 @@ def generate_random_id(size=3):
     return ''.join(random.choice(chars) for _ in range(size))
 
 @db.use
+def get_user_urls(cursor,user_id):
+    query = """SELECT * FROM urls JOIN user_urls ON urls.id = user_urls.url_id WHERE user_urls.user_id = %(user_id)s"""
+    cursor.execute( query, {"user_id": user_id} )
+    return cursor.fetchall()
+
+@db.use
 def get_url_by_shorten(cursor, code):
     query = """SELECT * FROM urls;"""
     cursor.execute(query)
@@ -39,7 +45,7 @@ def update_shortened(cursor, id):
 
 @db.use
 def add_url(cursor, data):
-    query = """INSERT INTO urls (password,url,short_url,views,shortened) VALUES (%(password)s,%(url)s,%(short_url)s,%(views)s,%(shortened)s)"""
+    query = """INSERT INTO urls (password,url,short_url,views,shortened) VALUES (%(password)s,%(url)s,%(short_url)s,%(views)s,%(shortened)s) RETURNING id"""
     cursor.execute( query, {
         'password': data['password'],
         'url': data['url'],
@@ -48,8 +54,19 @@ def add_url(cursor, data):
         'shortened': 1
     })
 
+    last_insert_id = cursor.fetchone()
+    return last_insert_id['id']
 
-def shortify(url):
+@db.use
+def add_url_for_user(cursor, data):
+    query = """INSERT INTO user_urls (user_id, url_id) VALUES (%(user_id)s,%(url_id)s)"""
+    cursor.execute( query, {
+        'user_id': data['user_id'],
+        'url_id': data['url_id']
+    })
+
+
+def shortify(url, for_user_id=None):
     short_url = ''
     exists = check_if_url_exists(url)
 
@@ -59,11 +76,15 @@ def shortify(url):
 
     short_url = generate_random_id(3)
 
-    add_url({
+    last_id = add_url({
         'password': '',
         'url': url,
         'short_url': short_url,
         'views': 0,
         'shortened': 0
     })
+
+    if for_user_id is not None:
+        add_url_for_user({'url_id': last_id, 'user_id': for_user_id})
+
     return str(short_url)

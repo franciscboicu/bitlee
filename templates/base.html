@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i" rel="stylesheet">
+    <link rel="stylesheet" href="">
+    <title>BitLee</title>
+</head>
+<body style="">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">BitLee</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% if 'logged_in' in session and session['logged_in'] == True %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{url_for('index')}}">Home <span class="sr-only">(current)</span></a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            {% if 'logged_in' in session and session['logged_in'] == True %}
+                <a href="/account/logout">
+                    <button class="btn btn-secondary float-right" style="margin-left:10px;">Logout</button>
+                </a>
+                <a href="/account/myurls" class="btn btn-success">My URL's</a>
+            {% else %}
+                    <a class=" btn btn-warning" href="/account/register">Register</a>
+                    <a class="btn btn-primary ml-2" href="/account/login">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    </li>
+    </ul>
+
+</div>
+
+</nav>
+
+
+    {% block content %}{% endblock %}
+
+<script>
+
+
+</script>
+</body>
+</html>
+
+
+

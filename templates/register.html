@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+        <div class="row">
+
+        <div class="col-md-4">
+
+        </div>
+
+        <div class="col-md-4 text-center">
+
+                <br/>
+            <img src="/static/bit-lee.png" width="100"/>
+
+            <div class="form-group">
+                <form action="{{url_for('account_register')}}" method="post">
+                    <div class="form-group">
+                        <br/>
+                        <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="username"
+                               name="username">
+                               <br/>
+                        <input type="password" class="form-control" id="exampleFormControlInput1"
+                               placeholder="password" name="user-password"><br>
+                        <button type="submit"
+                                class="btn btn-warning btn-block">{{ 'Login' if login is true else 'Register' }}</button>
+                        
+                        <br/>
+                        <a href="{{url_for('account_login')}}" class=""> Already have an account? </a>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+
+        </div>
+        
+    </div>
+
+    {% endblock %}
+
+
+

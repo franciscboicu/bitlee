@@ -1,63 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i" rel="stylesheet">
-    <link rel="stylesheet" href="">
-    <title>BitLee</title>
-</head>
-
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">BitLee</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            {% if logged_in %}
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-            {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/account/register">Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/account/login">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/shortner-short">Shorten</a>
-                </li>
-            {% endif %}
-        </ul>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            {% if logged_in %}
-                <a href="/account/logout">
-                    <button class="btn btn-secondary float-right">Logout</button>
-                </a>
-            {% else %}
-
-                <button class="btn btn-secondary">Account</button>
-
-            {% endif %}
-        </div>
-    </div>
-    </li>
-    </ul>
-    {% block content %}
-
-        </div>
-
-        </nav>
-
-        <body class="background">
-
+{% extends 'base.html' %}
+{% block content %}
         <div class="row">
+
         <div class="col-md-4">
 
         </div>
@@ -72,10 +16,27 @@
                         <input type="text" class="form-control" placeholder="Your long url"
                                name="url">
                                <br/>
+                        
+                        <input type="text" {% if 'logged_in' not in session %} disabled {% endif %}class="form-control" placeholder="password protected url (must be logged in)"
+                        name="password">
+                        <br/>
+                            
+
                         <button type="submit"
-                                class="btn btn-primary btn-block">Send it to Bruce Lee</button>
+                                class="btn btn-primary btn-block"><strong>Ask Bruce Lee to punch and shorten</strong></button>
                     </div>
                 </form>
+
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+
+                    <div class="alert alert-dark" role="alert">
+                    {% for message in messages %}
+                        <strong>{{ message }}</strong>
+                     {% endfor %}                    
+                    </div>
+                    {% endif %}
+                {% endwith %}
 
                 {% if shortified_url_code %}
                 <br/>
@@ -91,8 +52,8 @@
 
         </div>
 
-    {% endblock %}
     </div>
+    {% endblock %}
 
 
 
