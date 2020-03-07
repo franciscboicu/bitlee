@@ -65,6 +65,13 @@ def add_url_for_user(cursor, data):
         'url_id': data['url_id']
     })
 
+@db.use
+def delete_user_url(cursor, data):
+    query = """DELETE FROM user_urls WHERE user_id = %(user_id)s AND url_id=%(url_id)s"""
+    cursor.execute(query, {
+        'user_id': data['user_id'],
+        'url_id': data['url_id']
+    })
 
 def shortify(url, for_user_id=None):
     short_url = ''

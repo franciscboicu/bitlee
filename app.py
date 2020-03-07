@@ -86,8 +86,8 @@ def account_url_delete():
     if request.method !=  'POST':
         return redirect(url_for("account_myurls"))
     url_id = request.form['url_id']
-    url_dm.delete_user_url(url_id)
-    return str(url_id)
+    url_dm.delete_user_url({'url_id': url_id, 'user_id': session.get("user_id")})
+    return redirect(url_for("account_myurls"))
 
 @app.route('/shorten-short', methods=['POST'])
 def make_short():
