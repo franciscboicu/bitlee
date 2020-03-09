@@ -21,7 +21,7 @@
         <ul class="navbar-nav mr-auto">
             {% if 'logged_in' in session and session['logged_in'] == True %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{url_for('index')}}">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="{{url_for('index')}}">Short URL <span class="sr-only">(current)</span></a>
                 </li>
             {% endif %}
         </ul>

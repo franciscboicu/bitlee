@@ -1,6 +1,5 @@
 from flask import Flask, render_template, flash, redirect, request, url_for, jsonify, session
 from functools import wraps
-import test_data_manager as tdm
 import user_data_manager as user_dm
 import url_data_manager as url_dm
 
@@ -8,37 +7,45 @@ app = Flask(__name__)
 app.secret_key = user_dm.random_api_key()
 app.config['domain_name'] = 'http://127.0.0.1:5000/'
 
+@app.route("/",methods=["GET", "POST"])
+def index():
+    short_url, password = '', ''
+    
+    if request.method == 'POST' and request.form['url'] == '':
+        flash('Give Bruce Lee an URL to punch!')
+        return render_template('shortner.html')
 
-@app.route("/", defaults={"short_url": None},methods=["GET", "POST"])
-@app.route('/<short_url>', methods=["GET", "POST"])
-def index(short_url):
-    shortified_url_code, password = '', ''
-    for_user_id = None
-    if 'user_id' in session:
-        for_user_id = session['user_id']
-        
     if request.method == 'POST':
-        if request.form['url'] == '':
-            flash('Give Bruce Lee an URL to punch!')
-            return render_template('shortner.html')
-        if for_user_id is not None:
-            password = request.form['password']
-        shortified_url_code = url_dm.shortify(request.form['url'], for_user_id, password)
+        user_id  = session['user_id'] if user_dm.is_logged_in() else None
+        password = request.form['password'] if user_dm.is_logged_in() else ''
+        short_url = url_dm.shortify(request.form['url'], user_id, password)
 
-    if short_url == None:
-        return render_template('shortner.html', shortified_url_code=shortified_url_code)
-        
-    url = url_dm.check_if_short_url_exists(short_url)
-    if url:
+    return render_template('shortner.html', shortified_url_code=short_url)
+
+@app.route('/<short_url>', methods=["GET", "POST"])
+def unshort_url(short_url=None):    
+    url = url_dm.get_url(short_url)
+
+    if request.method == 'POST' and url['password'] is not '':
+        if url['password'] == request.form['password']:
+            url_dm.update_views(url['id'])
+            return redirect(url['url'])
+        flash('Hey, wrong password!')       
+        return render_template('password_protected_url.html', url=url)
+
+    if url and url['password'] is '':
         url_dm.update_views(url['id'])
         return redirect(url['url'])
-        
-    return render_template('shortner.html', shortified_url_code=shortified_url_code)
+    elif url and url['password'] is not '':
+        return render_template('password_protected_url.html', url=url)
 
+    flash("What?!")
+    return redirect('/')
+    
 @app.route('/account/login', methods=["POST", "GET"])
 def account_login():
     if user_dm.is_logged_in():
-        return redirect('/')
+        return redirect(url_for('index'))
 
     if request.method == 'POST':
         username, password = request.form['username'], request.form['password']
@@ -63,12 +70,17 @@ def account_logout():
 
 @app.route('/account/register', methods=["GET", "POST"])
 def account_register():
+    if user_dm.is_logged_in():
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['user-password']
         hashed_pass = user_dm.hash_password(password)
         user_dm.add_user(username=username, password=hashed_pass)
+        flash("Bruce Lee agreed that you can login")
         return redirect('/account/login')
+
     return render_template('register.html', login=False)
 
 @app.route('/account/myurls')
